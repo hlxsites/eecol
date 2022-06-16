@@ -97,8 +97,55 @@ export function titleCase(string) {
  */
 async function fetchCategories() {
   if (!window.categories) {
-    const response = await fetch('https://main--eecol--hlxsites.hlx-orch.live/categories');
+    const response = await fetch('https://graph.adobe.io/api/1c5364e3-f24b-4fda-b66e-af6a92be42cb/graphql?api_key=0986967bae3e492b9bcc2f9d81ade31a', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `{
+  categories {
+    total_count
+    items {
+      uid
+      level
+      url_key
+      url_path
+      name
+      path
+      children_count
+      children {
+        uid
+        level
+        name
+        url_key
+        url_path
+        path
+        children_count
+        path_in_store
+        children {
+          uid
+          level
+          name
+          path
+          url_key
+          url_path
+        }
+      }
+    }
+    page_info {
+      current_page
+      page_size
+      total_pages
+    }
+  }
+}`,
+      }),
+    });
+
     const json = await response.json();
+
+    console.log(json);
     const categories = json.data.categories?.items[0].children;
     const categoriesKeyDictionary = {};
     const categoriesIdDictionary = {};
@@ -382,12 +429,12 @@ export function getSelectedAccount() {
 
 /**
  * Set key/value, scoped to selected account
- * @param {string} key 
- * @param {Object|string|number|boolean} val 
+ * @param {string} key
+ * @param {Object|string|number|boolean} val
  */
 export function storeUserData(key, val) {
   const id = localStorage.getItem('selectedAccount');
-  if(!id) {
+  if (!id) {
     console.warn('storeUserData() No account selected');
     return;
   }
@@ -398,18 +445,18 @@ export function storeUserData(key, val) {
 
 /**
  * Get value for key, scoped to selected account
- * @param {string} key 
+ * @param {string} key
  */
 export function retrieveUserData(key) {
   const id = localStorage.getItem('selectedAccount');
-  if(!id) {
+  if (!id) {
     console.warn('retrieveUserData() No account selected');
     return;
   }
 
   const scopedKey = `account/${id}/${key}`;
   const data = localStorage.getItem(scopedKey);
-  if(!data) {
+  if (!data) {
     return;
   }
 
@@ -419,7 +466,6 @@ export function retrieveUserData(key) {
     return data;
   }
 }
-
 
 /**
  * Fetch the logged in user
