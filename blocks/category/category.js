@@ -719,8 +719,8 @@ export default async function decorate(block) {
   const categoryResultsView = new CategoryResultsController(block, placeholders);
   await categoryResultsView.load();
 
-  const section = document.createElement('div');
-  section.append(buildBlock('breadcrumbs', { elems: [] }));
-  await loadBlock(section, false);
-  block.prepend(section);
+  // const section = document.createElement('div');
+  // section.append(buildBlock('breadcrumbs', { elems: [] }));
+  // await loadBlock(section, false);
+  // block.prepend(section);
 }

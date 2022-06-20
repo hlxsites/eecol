@@ -45,8 +45,6 @@ function buildAutoBlock(main, blockName, replace = true, prepend = false) {
   section.append(buildBlock(blockName, { elems: [] }));
   if (replace) {
     main.innerHTML = '';
-    // If we are replacing the main content, we likely also want to add breadcrumbs
-    section.prepend(buildBlock('breadcrumbs', { elems: [] }));
   }
   return prepend ? main.prepend(section) : main.append(section);
 }
@@ -500,7 +498,15 @@ HelixApp.init({
       makeLinksRelative(accountNav);
     }
   })
-  .withLoadDelayed(() => {
+  .withLoadDelayed(async () => {
     window.setTimeout(() => import('./delayed.js'), 4000);
+
+    const main = document.querySelector('main');
+    const breadcrumbsDiv = document.createElement('div');
+    const breadcrumbs = buildBlock('breadcrumbs', '');
+    breadcrumbsDiv.append(breadcrumbs);
+    main.prepend(breadcrumbsDiv);
+    decorateBlock(breadcrumbs);
+    await loadBlock(breadcrumbs);
   })
   .decorate();
