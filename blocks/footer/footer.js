@@ -8,27 +8,27 @@ function renderSocial(block) {
     <p>
       <a href="https://www.facebook.com/EecolElectric">
         <span class="icon icon-facebook">
-          <img src="/icons/social-facebook.svg">
+          <img src="/icons/social-facebook.svg" width="24" height="24">
         </span>
       </a>
     </p>
     <p>
       <a href="https://twitter.com/EECOL">
         <span class="icon icon-twitter">
-          <img src="/icons/social-twitter.svg">
+          <img src="/icons/social-twitter.svg" width="24" height="24">
         </span>
       </a>
     </p>
     <p>
       <a href="https://www.instagram.com/eecolsouthernalberta">
         <span class="icon icon-instagram">
-          <img src="/icons/social-instagram.svg">
+          <img src="/icons/social-instagram.svg" width="24" height="24">
         </span>
       </a>
     </p>
     <p>
       <a href="https://ca.linkedin.com/company/eecol-electric">
-        <img src="/icons/social-linkedin.svg">
+        <img src="/icons/social-linkedin.svg" width="24" height="24">
       </a>
     </p>
   `;
@@ -60,6 +60,8 @@ export default async function decorate(block) {
   footerSections.forEach((section) => {
     const disclosure = document.createElement('img');
     disclosure.src = '/icons/plus.svg';
+    disclosure.width = '20px';
+    disclosure.height = '20px';
     section.classList.add('footer-section');
     section.setAttribute('aria-expanded', 'false');
 

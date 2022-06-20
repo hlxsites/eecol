@@ -225,6 +225,13 @@ export async function searchProducts(query) {
   return query;
 }
 
+function replaceProductImages(data) {
+  return data.map((product) => {
+    product.image = `${product.image.replace('https://qa-store.eecol.com/', 'https://main--eecol--hlxsites.hlx-orch.live/')}?format=webplyhttps://main--eecol--hlxsites.hlx-orch.live/media/catalog/product/cache/6d59eebca7373f2b9debabbeed105ddb/f/f/ff1a6bd51074f80f2873e6e068ed59dcf658b2cd-large.png?format=webply&quality=medium&width=750`;
+    return product;
+  });
+}
+
 /**
  * Returns an array of products for a category
  * @param {Object} category
@@ -236,6 +243,7 @@ export async function lookupCategory(category, activeFilterUrlParams) {
   const req = await fetch(`https://main--eecol--hlxsites.hlx-orch.live/productLookup?${category.uid ? `category=${category.uid}` : ''}${activeFilterUrlParams ? `&${activeFilterUrlParams}` : ''}`);
   if (req.status === 200) {
     products = await req.json();
+    products.data = replaceProductImages(products.data);
   }
   return products;
 }
@@ -250,7 +258,7 @@ export async function lookupProduct(sku) {
   if (sku) {
     const req = await fetch(`https://main--eecol--hlxsites.hlx-orch.live/productLookup?sku=${sku}`);
     const json = await req.json();
-    [product] = json.data;
+    [product] = replaceProductImages(json.data);
   }
   return product;
 }
@@ -505,7 +513,7 @@ export const store = {
  *
  */
 HelixApp.init({
-  lcpBlocks: ['hero'],
+  lcpBlocks: ['hero', 'product'],
   rumGeneration: ['project-1'],
   productionDomains: ['poc-staging.eecol.com'],
   lazyStyles: true,
@@ -540,6 +548,6 @@ HelixApp.init({
     }
   })
   .withLoadDelayed(() => {
-    window.setTimeout(() => import('./delayed.js'), 100);
+    window.setTimeout(() => import('./delayed.js'), 4000);
   })
   .decorate();

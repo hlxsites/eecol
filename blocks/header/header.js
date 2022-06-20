@@ -88,14 +88,28 @@ function collapseAllNavSections(sections) {
   });
 }
 
-function createCategory(children) {
+function createCategory(title, children) {
   const ul = document.createElement('ul');
+
+  const firstChild = children[0];
+  if (firstChild) {
+    ul.classList.add(`level-${firstChild.level}`);
+  }
+  ul.classList.add('nav-group');
+
+  if (title) {
+    const li = document.createElement('li');
+    li.classList.add('nav-group-title');
+    li.innerText = title;
+    ul.appendChild(li);
+  }
+
   children.forEach((child) => {
     if (child.url_path) {
       const li = document.createElement('li');
-      li.innerHTML = `<a href="/ca/en/products/category/${child.url_path.split('.')[0]}">${child.name}</a>`;
+      li.innerHTML = `<a href="/ca/en/products/category/${child.url_path.split('.')[0]}">${child.name}</a>${child.level === 2 ? '<span><img class="disclosureArrow" src="/icons/disclosure-white.svg"></span>' : ''}`;
       if (child.children) {
-        li.append(createCategory(child.children));
+        li.append(createCategory(child.level !== 3 ? child.name : '', child.children));
       }
       ul.append(li);
     }
@@ -109,6 +123,7 @@ function createCategory(children) {
  */
 
 export default async function decorate(block) {
+  let categs;
   const cfg = readBlockConfig(block);
   block.textContent = '';
 
@@ -158,7 +173,7 @@ export default async function decorate(block) {
     // Embedding svg using the img tag kills the ability to change the color via css.
     languageSwitcher.innerHTML = /* html */`
     <span>English</span>
-    <img class='canada-flag' src='/icons/canada-flag.svg'/>
+    <img class='canada-flag' src='/icons/canada-flag.svg' width="11" height="12"/>
     <svg xmlns="http://www.w3.org/2000/svg" width="237.201" height="348.328" viewBox="0 0 237.201 348.328"  fill="currentColor">
       <g transform="matrix(0.995, -0.105, 0.105, 0.995, -258.757, -67.721)" fill="currentColor">
         <path id="Path_4" data-name="Path 4" fill="currentColor" stroke="currentColor" d="M271.09,444.41,451.98,296.28l-23.062-28.164-.051.043L303.507,115.6l-28.125,23.1,125.33,152.51-152.68,125.03Z"/>
@@ -214,6 +229,27 @@ export default async function decorate(block) {
       });
     };
 
+    const filterCategoriesByAccount = () => {
+      /* adjust navigation based on account information */
+      const account = getSelectedAccount();
+      if (account) {
+        const topLevel = [...categs.querySelectorAll(':scope > li > a')];
+        const show = checkCategoriesInCatalog(topLevel.map((a) => a.textContent), account);
+        topLevel.forEach((a, i) => { a.closest('li').className = show[i] ? '' : 'hidden'; });
+      }
+    };
+
+    const buildProductCategories = (e) => {
+      const navGroup = e.target.querySelector('.nav-group li');
+      if (navGroup) return;
+
+      categs = createCategory('Categories', categories);
+      const products = nav.querySelector('.nav-sections > ul:first-of-type > li:first-of-type > ul');
+      products.replaceWith(categs);
+
+      filterCategoriesByAccount();
+    };
+
     fillSuggestions();
     input.addEventListener('input', fillSuggestions);
     input.addEventListener('keypress', (e) => {
@@ -243,19 +279,25 @@ export default async function decorate(block) {
     decorateIcons(nav);
     block.append(nav);
 
-    const categs = createCategory(categories);
-    const products = nav.querySelector('.nav-sections > ul:first-of-type > li:first-of-type > ul');
-    products.replaceWith(categs);
+    const products = nav.querySelector('.nav-sections > ul:first-of-type > li:first-of-type');
+    products.addEventListener('click', (e) => {
+      buildProductCategories(e);
+    });
+    const productsList = products.querySelector('ul');
+    productsList.classList.add('nav-group');
+    productsList.classList.add('level-2');
+    productsList.innerHTML = '';
 
-    const filterCategoriesByAccount = () => {
-      /* adjust navigation based on account information */
-      const account = getSelectedAccount();
-      if (account) {
-        const topLevel = [...categs.querySelectorAll(':scope > li > a')];
-        const show = checkCategoriesInCatalog(topLevel.map((a) => a.textContent), account);
-        topLevel.forEach((a, i) => { a.closest('li').className = show[i] ? '' : 'hidden'; });
-      }
-    };
+    const level1 = document.querySelector('nav .nav-sections > ul');
+    level1.classList.add('level-1');
+    const productsHeading = document.querySelector('nav .nav-sections > ul > li:first-of-type');
+    const hamburgerIcon = document.createElement('div');
+    hamburgerIcon.classList.add('nav-hamburger-icon');
+    productsHeading.prepend(hamburgerIcon);
+
+    const solutions = document.querySelector('header nav .nav-sections .level-1 .nav-drop:nth-child(2) ul');
+    solutions.classList.add('level-2');
+    solutions.classList.add('nav-group');
 
     document.body.addEventListener('account-change', () => {
       /* account switch */
