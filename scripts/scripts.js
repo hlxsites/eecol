@@ -130,6 +130,14 @@ async function fetchCategories() {
           path
           url_key
           url_path
+          children {
+            uid
+            level
+            name
+            path
+            url_key
+            url_path
+          }
         }
       }
     }
@@ -145,7 +153,6 @@ async function fetchCategories() {
 
     const json = await response.json();
 
-    console.log(json);
     const categories = json.data.categories?.items[0].children;
     const categoriesKeyDictionary = {};
     const categoriesIdDictionary = {};
