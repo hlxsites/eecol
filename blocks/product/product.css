@@ -29,7 +29,9 @@ div.product-wrapper {
 }
 
 .product .product-block .details .name h3 {
-    min-height: 38px;
+    min-height: 30px;
+    font-size: var(--heading-font-size-m); 
+    line-height: 1.1875em; 
 }
 
 /* images */
