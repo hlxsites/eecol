@@ -323,8 +323,7 @@ header .nav-sections .level-1 .nav-drop .nav-hamburger-icon {
 header nav .breadcrumbs-wrapper {
   grid-area: breadcrumbs;
   height: 68px;
-  padding-left: 20px;
-  width: 100%;
+  padding: 0 20px;
 }
 
 /* desktop nav styles */
