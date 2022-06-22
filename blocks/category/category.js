@@ -1,9 +1,4 @@
 import {
-  buildBlock,
-  loadBlock,
-} from '../../scripts/helix-web-library.esm.js';
-
-import {
   getPlaceholders,
   titleCase,
   getCategoriesKeyDictionary,
@@ -116,16 +111,16 @@ class CategoryFilterController {
    * On Facet container clicked
    */
   onFacetContainerClicked = (event) => {
-    const { currentTarget } = event;
-    if (currentTarget.getAttribute('aria-expanded') === 'false') {
-      const attributeCode = currentTarget.getAttribute('data-attribute-code');
+    const { currentTarget: { parentElement } } = event;
+    if (parentElement.getAttribute('aria-expanded') === 'false') {
+      const attributeCode = parentElement.getAttribute('data-attribute-code');
       const facet = this.getFacetByAttributeCode(attributeCode);
-      this.renderFacetOptions(currentTarget, facet);
-      currentTarget.querySelector('.products-facet-options').style.display = 'block';
-      currentTarget.setAttribute('aria-expanded', 'true');
+      this.renderFacetOptions(parentElement, facet);
+      parentElement.querySelector('.products-facet-options').style.display = 'block';
+      parentElement.setAttribute('aria-expanded', 'true');
     } else {
-      currentTarget.querySelector('.products-facet-options').style.display = 'none';
-      currentTarget.setAttribute('aria-expanded', 'false');
+      parentElement.querySelector('.products-facet-options').style.display = 'none';
+      parentElement.setAttribute('aria-expanded', 'false');
     }
   };
 
@@ -220,6 +215,8 @@ class CategoryFilterController {
         <label for="products-filter-${option.value}">${option.label} (${option.count})</label>
       `).join('');
     optionsContainer.innerHTML = optionsHTML;
+
+    addEventListeners([...optionsContainer.querySelectorAll('input')], 'change', this.onFacetSelected.bind(this));
   }
 
   /**
@@ -281,8 +278,7 @@ class CategoryFilterController {
     // TODO: Should be sanitized...
     facetsList.innerHTML = facetsHTML;
 
-    addEventListeners([...facetsList.querySelectorAll('input')], 'change', this.onFacetSelected.bind(this));
-    addEventListeners([...facetsList.querySelectorAll('.products-facet')], 'click', this.onFacetContainerClicked.bind(this));
+    addEventListeners([...facetsList.querySelectorAll('.products-facet h3')], 'click', this.onFacetContainerClicked.bind(this));
     facetsElement.querySelector('.products-filters-clear').addEventListener('click', this.onClearFacetSelection);
   }
 }

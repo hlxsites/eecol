@@ -524,6 +524,7 @@ HelixApp.init({
     }
   })
   .withLoadDelayed(() => {
+    // eslint-ignore-next-line import/no-cycle
     window.setTimeout(() => import('./delayed.js'), 4000);
   })
   .decorate();

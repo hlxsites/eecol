@@ -32,10 +32,6 @@ main .results-container .products-facets h3 {
     margin: 0;
 }
 
-main .results-container .products-facets input[type="checkbox"] {
-    display: none;
-}
-
 main .results-container .products-facets label {
     display: block;
     padding-left: 30px;
@@ -163,6 +159,10 @@ main .results-container .products-filters-selected span {
     margin-bottom: 8px;
     display: inline-block;
     font-size: var(--body-font-size-s);
+}
+
+main .results-container .products-facets input[type="checkbox"] {
+    display: none;
 }
 
 main .results-container .products-facet {

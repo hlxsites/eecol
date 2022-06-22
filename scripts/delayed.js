@@ -1,8 +1,7 @@
 // eslint-disable-next-line import/no-cycle
 import {
-  sampleRUM, getMetadata, buildBlock, decorateBlock, loadBlock,
+  sampleRUM,
 } from './helix-web-library.esm.js';
-import { PageTypes } from './scripts.js';
 
 // Core Web Vitals RUM collection
 sampleRUM('cwv');

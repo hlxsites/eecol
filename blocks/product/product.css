@@ -23,6 +23,11 @@ div.product-wrapper {
     min-height: 26px;
 }
 
+.product .product-config h3 {
+    font-size: var(--body-font-size-m);
+    font-family: var(--body-font-family);      
+}
+
 .product .product-block .details .name h3 {
     min-height: 38px;
 }
@@ -106,11 +111,6 @@ div.product-wrapper {
 
 .product .product-selected-image {
     display: none;
-}
-
-.product .product-config h3 {
-    font-size: var(--body-font-size-m);
-    font-family: var(--body-font-family);      
 }
 
 .product .product-config input[type='radio'] {
@@ -267,13 +267,6 @@ div.product-wrapper {
         width: 136px;
         margin: 8px;
         flex-shrink: 1;
-    }
-
-    .product picture img {
-        max-width: 274px;
-        padding-right: 20px;
-        aspect-ratio: 1;
-        object-fit: contain;
     }
 
     .product .product-images > picture.selected img {
