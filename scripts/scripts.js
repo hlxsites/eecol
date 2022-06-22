@@ -97,7 +97,7 @@ export function titleCase(string) {
  */
 async function fetchCategories() {
   if (!window.categories) {
-    const response = await fetch('https://graph.adobe.io/api/1c5364e3-f24b-4fda-b66e-af6a92be42cb/graphql?api_key=0986967bae3e492b9bcc2f9d81ade31a', {
+    const response = await fetch('https://graph-dev3.adobe.io/api/e5f22310-1eab-4a3c-8771-943503170c1c/graphql?api_key=adobeio_onboarding', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
