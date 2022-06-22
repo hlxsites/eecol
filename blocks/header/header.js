@@ -221,7 +221,7 @@ export default async function decorate(block) {
           <source type="image/webp" srcset="./media_11e0e648e5f78452ada12404956dff13905bac140.png?width=2000&amp;format=webply&amp;optimize=medium" media="(min-width: 400px)">
           <source type="image/webp" srcset="./media_11e0e648e5f78452ada12404956dff13905bac140.png?width=750&amp;format=webply&amp;optimize=medium">
           <source type="image/png" srcset="./media_11e0e648e5f78452ada12404956dff13905bac140.png?width=2000&amp;format=png&amp;optimize=medium" media="(min-width: 400px)">
-          <img loading="lazy" alt="Home" type="image/png" src="./media_11e0e648e5f78452ada12404956dff13905bac140.webp?width=278&amp;format=webp&amp;optimize=medium" width="139" height="45">
+          <img loading="lazy" alt="Home" type="image/png" src="./media_11e0e648e5f78452ada12404956dff13905bac140.webp?width=139&amp;format=webp&amp;optimize=medium" width="139" height="45">
         </picture>
       </div>
       <div class="nav-search desktop">
