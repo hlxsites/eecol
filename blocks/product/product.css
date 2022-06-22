@@ -19,6 +19,14 @@ div.product-wrapper {
     font-size: var(--body-font-size-s);
 }
 
+.product .product-block .details .manufacturer {
+    min-height: 26px;
+}
+
+.product .product-block .details .name h3 {
+    min-height: 38px;
+}
+
 /* images */
 
 .product .product-images-wrapper {
