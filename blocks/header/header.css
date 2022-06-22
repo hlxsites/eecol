@@ -184,12 +184,12 @@ header .nav-toolbar {
 }
 
 header .nav-toolbar .nav-toolbar-logo {
-  max-width: 153px;
+  min-width: 153px;
   height: 57px;
 }
 
 header .nav-toolbar .nav-toolbar-logo img {
-  max-width: 139px;
+  min-width: 139px;
   height: auto;
   padding-top: 5px;
   padding-left: 15px;
