@@ -316,7 +316,7 @@ function normalizeHeadings(elem, allowedHeadings) {
 function addFavIcon(href) {
   const link = document.createElement('link');
   link.rel = 'icon';
-  link.type = 'image/svg+xml';
+  link.type = href.indexOf('.ico') ? 'image/x-icon' : 'image/svg+xml';
   link.href = href;
   const existingLink = document.querySelector('head link[rel="icon"]');
   if (existingLink) {
@@ -847,6 +847,7 @@ const defaultConfig = {
   makeLinksRelative: true,
   lazyStyles: false,
   autoAppear: true,
+  favIcon: '/styles/icon.svg',
 };
 
 /**
@@ -859,6 +860,7 @@ const defaultConfig = {
  * @property {string[]} lcpBlocks
  * @property {boolean} lazyStyles
  * @property {boolean} autoAppear
+ * @property {string} favIcon
  */
 
 class HelixApp {
@@ -1060,7 +1062,7 @@ class HelixApp {
       loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
     }
 
-    addFavIcon(`${window.hlx.codeBasePath}/styles/icon.svg`);
+    addFavIcon(`${window.hlx.codeBasePath}${this.config.favIcon ?? defaultConfig.favIcon}`);
     if (this.loadLazyHook) {
       this.loadLazyHook(doc);
     }

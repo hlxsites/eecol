@@ -36,6 +36,6 @@
     "stylelint-config-standard": "25.0.0"
   },
   "dependencies": {
-    "@dylandepass/helix-web-library": "^1.8.0"
+    "@dylandepass/helix-web-library": "1.9.0"
   }
 }
