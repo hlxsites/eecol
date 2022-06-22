@@ -186,7 +186,6 @@ header .nav-toolbar {
 header .nav-toolbar .nav-toolbar-logo {
   max-width: 153px;
   height: 57px;
-  display: none;
 }
 
 header .nav-toolbar .nav-toolbar-logo img {
@@ -197,9 +196,9 @@ header .nav-toolbar .nav-toolbar-logo img {
 }
 
 header .nav-toolbar .nav-toolbar-actions {
+  display: flex;
   align-items: center;
   height: 55px;
-  display: none;
 }
 
 header .nav-toolbar .nav-toolbar-actions > div{
@@ -266,7 +265,6 @@ header .nav-search {
   width: 100%;
   box-sizing: border-box;
   position: relative;
-  display: none;
 }
 
 header .nav-toolbar .nav-search {
