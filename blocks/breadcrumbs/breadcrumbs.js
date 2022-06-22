@@ -13,6 +13,10 @@ function renderBreadcrumbs(block, breadcrumbs) {
     </ul > `;
 
   block.innerHTML = breadCrumbsHTML;
+
+  if (breadcrumbs.length > 2) {
+    block.classList.add('trim');
+  }
 }
 
 /**

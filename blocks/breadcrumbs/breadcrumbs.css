@@ -20,7 +20,7 @@ body > .breadcrumbs-wrapper {
   text-decoration: underline;
 }
 
-.breadcrumbs li:not(:first-child):not(:nth-child(2))::before {
+.breadcrumbs li:not(:first-child)::before {
     content: "|";
     font-size: 12px;
     font-style: normal;
@@ -32,15 +32,25 @@ body > .breadcrumbs-wrapper {
     text-transform: none;
 }
 
-.breadcrumbs li:first-of-type {
+.breadcrumbs.trim li:not(:first-child):not(:nth-child(2))::before {
+    content: "";
+}
+
+.breadcrumbs.trim li:first-of-type {
   display: none;
 }
 
-.breadcrumbs li:last-of-type {
+.breadcrumbs.trim li:last-of-type {
   display: none;
 }
 
 @media (min-width: 900px) {
+  .breadcrumbs-wrapper {
+    max-width: 1590px;
+    margin: auto;
+    width: 100%;
+  }
+
   .breadcrumbs li:not(:first-child)::before {
     content: "|";
     font-size: 12px;
