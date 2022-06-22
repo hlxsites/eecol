@@ -114,9 +114,9 @@ class Cart {
 
 async function updateCartDisplay() {
   const ph = await fetchPlaceholders('/ca/en');
-  const { cart } = window;
 
   const createCartItem = (item, inCatalog) => {
+    const { cart } = store;
     const { details } = item;
     const div = document.createElement('div');
 
@@ -128,7 +128,7 @@ async function updateCartDisplay() {
     <div class="cart-item-image"><img src="${details.image}">
     </div>
     <div class="cart-item-details">
-        <h3>${details.title}</h3>
+        <h6>${details.name}</h6>
         ${createMods(['color', 'size'])}
         <p>${ph.qty} : ${item.quantity}</p>
         <p>${formatCurrency(item.price, ph.currency)} ${ph.ea}</p>
@@ -142,6 +142,7 @@ async function updateCartDisplay() {
   };
 
   const createMiniCart = () => {
+    const { cart } = store;
     /* check for account settings */
     const account = getSelectedAccount();
     const skus = cart.items.map((item) => item.sku);
@@ -170,18 +171,16 @@ async function updateCartDisplay() {
     return div;
   };
 
-  const blocks = document.querySelectorAll('.cart-display');
-  blocks.forEach((display) => {
-    display.textContent = '';
-    if (display.closest('header')) {
-      const badge = document.createElement('div');
-      badge.textContent = cart.totalItems ? cart.totalItems : '';
-      badge.className = 'cart-badge';
-      display.append(badge);
-      const miniCart = createMiniCart(ph);
-      display.append(miniCart);
-    }
-  });
+  const cartDisplay = document.querySelector('.cart-display');
+  if (cartDisplay.closest('header')) {
+    cartDisplay.innerHTML = 'Cart';
+    const badge = document.createElement('div');
+    badge.textContent = store.cart.totalItems ? store.cart.totalItems : '';
+    badge.className = 'cart-badge';
+    cartDisplay.append(badge);
+    const miniCart = createMiniCart(ph);
+    cartDisplay.append(miniCart);
+  }
 }
 
 export default function decorate(block) {

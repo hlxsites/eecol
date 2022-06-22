@@ -1,10 +1,4 @@
 import {
-  toCamelCase,
-  buildBlock,
-  loadBlock,
-} from '../../scripts/helix-web-library.esm.js';
-
-import {
   getPlaceholders,
   titleCase,
   getCategoriesKeyDictionary,
@@ -65,6 +59,7 @@ import {
  * @property {number} regular_price The regular price of the product
  * @property {string} sku The sku of the product
  * @property {string} stock_status The stock status of the product
+ * @property {import('../product/product.js').ProductPricing} pricing
  */
 
 const ExcludedFilterKeys = ['fulltext', 'page', 'query'];
@@ -116,13 +111,16 @@ class CategoryFilterController {
    * On Facet container clicked
    */
   onFacetContainerClicked = (event) => {
-    const { currentTarget } = event;
-    if (currentTarget.getAttribute('aria-expanded') === 'false') {
-      currentTarget.querySelector('.products-facet-options').style.display = 'block';
-      currentTarget.setAttribute('aria-expanded', 'true');
+    const { currentTarget: { parentElement } } = event;
+    if (parentElement.getAttribute('aria-expanded') === 'false') {
+      const attributeCode = parentElement.getAttribute('data-attribute-code');
+      const facet = this.getFacetByAttributeCode(attributeCode);
+      this.renderFacetOptions(parentElement, facet);
+      parentElement.querySelector('.products-facet-options').style.display = 'block';
+      parentElement.setAttribute('aria-expanded', 'true');
     } else {
-      currentTarget.querySelector('.products-facet-options').style.display = 'none';
-      currentTarget.setAttribute('aria-expanded', 'false');
+      parentElement.querySelector('.products-facet-options').style.display = 'none';
+      parentElement.setAttribute('aria-expanded', 'false');
     }
   };
 
@@ -157,6 +155,10 @@ class CategoryFilterController {
       // TODO: Should be sanitized...
       this.activeFilterConfig[key] = value;
     });
+  }
+
+  getFacetByAttributeCode(attributeCode) {
+    return this.collectionFacets.filter((facet) => facet.attribute_code === attributeCode)[0];
   }
 
   getFilterQueryParamsString() {
@@ -205,23 +207,29 @@ class CategoryFilterController {
     </div>`;
   }
 
+  renderFacetOptions(element, facet) {
+    const { attribute_code: attributeCode, options } = facet;
+    const optionsContainer = element.querySelector('.products-facet-options');
+    const optionsHTML = options.map((option) =>/* html */`
+        <input type="checkbox" value="${option.value}" id="products-filter-${option.value}" name="${attributeCode}">
+        <label for="products-filter-${option.value}">${option.label} (${option.count})</label>
+      `).join('');
+    optionsContainer.innerHTML = optionsHTML;
+
+    addEventListeners([...optionsContainer.querySelectorAll('input')], 'change', this.onFacetSelected.bind(this));
+  }
+
   /**
    * Render a facet
    * @param {string} facetKey
    * @returns The facet HTML
    */
   renderFacet(facet) {
-    // const facet = filteredFacets[facetKey];
-    //  const values = Object.keys(facet);
     const { label, attribute_code: attributeCode, options } = facet;
     return /* html */`
-      <div class="products-facet" aria-expanded="false">
+      <div class="products-facet" aria-expanded="false" data-attribute-code="${attributeCode}">
         <h3>${label} (${options.length})<img src='/icons/disclosure.svg'></h3>
-        <div class="products-facet-options">
-          ${options.map((option) =>/* html */`
-              <input type="checkbox" value="${option.value}" id="products-filter-${option.value}" name="${attributeCode}">
-              <label for="products-filter-${option.value}">${option.label} (${option.count})</label>`).join('')}
-        </div>
+        <div class="products-facet-options"></div>
       </div>
     `;
   }
@@ -270,8 +278,7 @@ class CategoryFilterController {
     // TODO: Should be sanitized...
     facetsList.innerHTML = facetsHTML;
 
-    addEventListeners([...facetsList.querySelectorAll('input')], 'change', this.onFacetSelected.bind(this));
-    addEventListeners([...facetsList.querySelectorAll('.products-facet')], 'click', this.onFacetContainerClicked.bind(this));
+    addEventListeners([...facetsList.querySelectorAll('.products-facet h3')], 'click', this.onFacetContainerClicked.bind(this));
     facetsElement.querySelector('.products-filters-clear').addEventListener('click', this.onClearFacetSelection);
   }
 }
@@ -612,6 +619,7 @@ class CategoryResultsController {
     let productInCatalog = true;
     if (account) {
       const matches = checkProductsInCatalog([product.sku], account, [product]);
+      // eslint-disable-next-line no-unused-vars
       [productInCatalog] = matches;
     }
 
@@ -627,7 +635,6 @@ class CategoryResultsController {
         <div class="catalog">
           <div>Manufacturer #: ${product.manufacturer_part_number_brand}</div>
           <div>SKU #: ${product.sku}</div>
-          <div>Customer Part #: ${product.sku}</div>
         </div>
       </div>`;
     return (card);
@@ -718,9 +725,4 @@ export default async function decorate(block) {
 
   const categoryResultsView = new CategoryResultsController(block, placeholders);
   await categoryResultsView.load();
-
-  const section = document.createElement('div');
-  section.append(buildBlock('breadcrumbs', { elems: [] }));
-  await loadBlock(section, false);
-  block.prepend(section);
 }

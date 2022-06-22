@@ -11,19 +11,24 @@
  */
 
  :root {
+  /* brand colors */
+  --bright-blue: #0099d8;
+  --dark-gray: #1d252d;
+  --dark-overlay: #1d252dc0;
+
   /* colors */
   --link-color: #0099d8;
   --brand-color: #0099d8;
   --link-hover-color: #0099d8;
-  --background-color: #fff;
+  --background-color: #fefefe;
   --medium-background-color: #092a42;
   --overlay-background-color: #eee;
   --highlight-background-color: #f4f6f5;
   --text-color: #000;
   --dark-background-color: #012139;
   --border-color: #DDE3E3;
-  --nav-background-color: #dde4e4;
-  --negative-color: rgb(180, 26, 26);
+  --nav-background-color: #F4F6F5;
+  --negative-color: #b41a1a;
 
   /* fonts */
   --body-font-family: 'Source Sans Pro', helvetica, ubuntu, roboto, noto, sans-serif;
@@ -45,14 +50,8 @@
   --heading-font-size-xs: 16px;
 
   /* nav height */
-  --nav-height: 116px;
-
-}
-
-@media (min-width: 1000px) {
-  :root {
-    --nav-height: 151px;
-  }
+  --nav-height: 141px;
+  --breadcrumbs-height: 69px; 
 }
 
 body {
@@ -74,13 +73,13 @@ img {
   height: auto;
 }
 
-header {
+body header {
   height: var(--nav-height);
   grid-area: header;
 }
 
-.breadcrumbs {
-  grid-area: breadcrumbs;
+body.commerce-page header {
+  height: calc(var(--nav-height) + var(--breadcrumbs-height));
 }
 
 footer {
@@ -102,35 +101,31 @@ h4, h5, h6 {
   margin-top: 1em;
   margin-bottom: .5em;
   scroll-margin: calc(var(--nav-height) + 1em);
+  line-height: 1.5em; 
 }
 
 h1 { 
   font-size: var(--heading-font-size-xxl); 
-  line-height: 2.5em; 
   font-weight: 700; 
 }
 
 h2 { 
   font-size: var(--heading-font-size-xl); 
-  line-height: 2em; 
   font-weight: 600; 
 }
 
 h3 {
   font-size: var(--heading-font-size-l); 
-  line-height: 1.6875em; 
   font-weight: 600; 
 }
 
 h4 { 
   font-size: var(--heading-font-size-m); 
-  line-height: 1.2em; 
   font-weight: 600; 
 }
 
 h5 { 
   font-size: var(--heading-font-size-s); 
-  line-height: 1.125em; 
   font-weight: 400; 
 }
 
@@ -240,6 +235,7 @@ main input[type=checkbox] {
 
 main .section {
   padding: 16px;
+  position: relative;
 }
 
 main pre {
@@ -332,26 +328,18 @@ main img {
 
 @media (min-width: 900px) {
   :root {
-    --heading-font-size-xxl: 48px;
-    --heading-font-size-xl: 44px;
-    --heading-font-size-l: 36px;
-    --heading-font-size-m: 36px;
+    --heading-font-size-xxl: 36px;
+    --heading-font-size-xl: 32px;
+    --heading-font-size-l: 30px;
+    --heading-font-size-m: 28px;
     --heading-font-size-s: 24px;
     --heading-font-size-xs: 22px;  
   }
 
-  h1 { line-height: 60px; }
-  h2 { line-height: 44px; }
-  h3 { line-height: 38px; }
-  h4 { line-height: 34px;}
-  
   h5 { 
-    line-height: 30px; 
     font-weight: 600; 
   }
-  
-  h6 { line-height: 28px; }
-  
+    
   .section > div {
     max-width: 1200px;
     margin: auto;
@@ -371,7 +359,23 @@ main .section[data-section-status='initialized'] {
 
 main .section.highlight {
   background-color: var(--highlight-background-color);
+  text-align: center;
 }
+
+main .section.dark {
+  background-color: var(--dark-gray);
+  text-align: center;
+}
+
+.dark {
+  color: white;
+}
+
+.dark h1, .dark h2, .dark h3,
+.dark h4, .dark h5, .dark h6 {
+  color: var(--bright-blue);
+}
+
 
 @media (min-width: 900px) {
   body.account {
@@ -379,4 +383,42 @@ main .section.highlight {
     grid-template-areas: 'header header' 'breadcrumbs breadcrumbs' 'accountnav main' 'footer footer';
     grid-template-columns: 375px 1fr;
   }  
+}
+
+
+main .section picture.section-background {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+main .section picture.section-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+main .section.background-image .default-content-wrapper {
+  background-color: #fffc;
+  margin: 16px;
+  padding: 16px;
+}
+
+@media (min-width: 900px) {
+  main .section picture.section-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  main .section.background-image .default-content-wrapper {
+    width: 60%;
+    max-width: 600px;
+    margin: 32px;
+    padding: 32px;
+  }
+    
 }

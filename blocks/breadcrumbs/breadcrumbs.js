@@ -13,6 +13,10 @@ function renderBreadcrumbs(block, breadcrumbs) {
     </ul > `;
 
   block.innerHTML = breadCrumbsHTML;
+
+  if (breadcrumbs.length > 2) {
+    block.classList.add('trim');
+  }
 }
 
 /**
@@ -49,51 +53,48 @@ export default async function decorate(block) {
     }
     renderBreadcrumbs(block, breadcrumbs);
   } else if (pageType === 'product') {
-    document.addEventListener('product-loaded', async () => {
-      console.log('product loaded', store.product);
-      const categoryIdDictionary = await getCategoriesIdDictionary();
-      const {
-        categories: productCategories,
-        name: productName,
-        url_key: productUrlKey,
-      } = store.product;
-      pathsArray.pop();
-      pathsArray.push('category');
-      productCategories.forEach((productCategoryId) => {
-        const productCategory = categoryIdDictionary[productCategoryId];
-        if (productCategory) {
-          const { name: categoryName, url_key: categoryUrlKey } = productCategory;
-          breadcrumbs.push({
-            name: categoryName,
-            path: `${pathsArray.join('/')}/${categoryUrlKey}`,
-          });
+    const categoryIdDictionary = await getCategoriesIdDictionary();
+    const {
+      categories: productCategories,
+      name: productName,
+      url_key: productUrlKey,
+    } = store.product;
+    pathsArray.pop();
+    pathsArray.push('category');
+    productCategories.forEach((productCategoryId) => {
+      const productCategory = categoryIdDictionary[productCategoryId];
+      if (productCategory) {
+        const { name: categoryName, url_key: categoryUrlKey } = productCategory;
+        breadcrumbs.push({
+          name: categoryName,
+          path: `${pathsArray.join('/')}/${categoryUrlKey}`,
+        });
 
-          pathsArray.push(categoryUrlKey);
-        }
-      });
-
-      breadcrumbs.push({
-        name: productName,
-        path: `${pathsArray.join('/')}/${productUrlKey}`,
-      });
-
-      renderBreadcrumbs(block, breadcrumbs);
+        pathsArray.push(categoryUrlKey);
+      }
     });
+
+    breadcrumbs.push({
+      name: productName,
+      path: `${pathsArray.join('/')}/${productUrlKey}`,
+    });
+
+    renderBreadcrumbs(block, breadcrumbs);
   } else {
     block.querySelectorAll(':scope > div').forEach((row) => {
-      const [name, path] = [...row.querySelectorAll(':scope > div')].map(n => n.innerText);
-      if(name && path) {
+      const [name, path] = [...row.querySelectorAll(':scope > div')].map((n) => n.innerText);
+      if (name && path) {
         breadcrumbs.push({
-          name, 
-          path
+          name,
+          path,
         });
       }
     });
 
     renderBreadcrumbs(block, breadcrumbs);
     const header = document.querySelector('body > header');
-    let wrapper = block.parentElement;
-    if(header) {
+    const wrapper = block.parentElement;
+    if (header) {
       wrapper.parentElement.classList.remove('breadcrumbs-container');
       wrapper.parentElement.removeChild(wrapper);
       header.insertAdjacentElement('afterend', wrapper);

@@ -33,3 +33,41 @@
     aspect-ratio: 4 / 3;
     object-fit: cover;
 }
+
+.cards.overlay > ul > li {
+    position: relative;
+    background-color: unset;
+}
+
+.cards.overlay .cards-card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+}
+
+.cards.overlay li.dark {
+    background-color: var(--dark-gray);
+}
+
+.cards.overlay li.dark .cards-card-body{
+    aspect-ratio: unset;
+    height: unset;
+}
+
+.cards.overlay .cards-card-image picture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+}
+
+.cards.overlay > ul > li img {
+    height: 100%;
+}
+
+.cards.overlay .button:any-link {
+    background-color: var(--dark-overlay);
+}

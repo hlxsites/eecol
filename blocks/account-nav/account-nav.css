@@ -10,14 +10,14 @@
 }
 
 .nav-group:not(:last-child) {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid #0000004d;
 }
 
 .nav-group ul {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
     list-style-type: none;
-    padding-inline-start: 0px;
+    padding-inline-start: 0;
 }
 
 .nav-group.account {
@@ -26,7 +26,7 @@
 
 .nav-group.account .account-wrapper {
     padding: var(--gap) var(--gap) 0;
-    margin: calc(var(--gap)*-1) calc(var(--gap)*-1) 0;
+    margin: calc(var(--gap) * -1) calc(var(--gap) * -1) 0;
     position: relative;
 }
 
@@ -34,7 +34,6 @@
     content: '';
     position: absolute;
     left: -1px;
-    z-index: 999;
     width: 4px;
     height: 35%;
     background: var(--brand-color);
@@ -42,7 +41,7 @@
 }
 
 .nav-group.account p {
-    margin: 0px;
+    margin: 0;
     font-weight: 600;
 }
 

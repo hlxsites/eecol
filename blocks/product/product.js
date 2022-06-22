@@ -9,7 +9,7 @@ import {
 } from '../../scripts/scripts.js';
 
 /**
- * Mulesoft Inventory Object
+ * Mulesoft Pricing Object
  * @typedef {Object} ProductPricing
  * @property {string} productId The product id, manufacturer_part_number_brand in CIF?
  * @property {string} productLine Manufacturer code from EECOL
@@ -43,7 +43,6 @@ class ProductView {
       this.render404();
     }
 
-    document.body.addEventListener('cart-update', this.render.bind(this));
     document.body.addEventListener('account-change', this.render.bind(this));
   }
 
@@ -52,21 +51,41 @@ class ProductView {
    */
   enableAddToCart() {
     const addToButton = this.block.querySelector('.cart .action .add-to-cart');
+    const notInCatalogLabel = this.block.querySelector('.cart .not-in-catalog');
     const quantityInput = this.block.querySelector('.cart .action input');
-    if (store.cart
-      && store.cart.canAdd(
+    if (quantityInput) {
+      const quantity = parseInt(quantityInput.value, 2);
+      if (store.cart
+        && quantityInput
+        && store.cart.canAdd(
+          store.product.sku,
+          store.product,
+          store.product.pricing.sellprice * quantity,
+          quantity,
+        )
+      ) {
+        addToButton.disabled = false;
+        quantityInput.disabled = false;
+        notInCatalogLabel.classList.remove('visible');
+        return;
+      }
+      addToButton.disabled = true;
+      quantityInput.disabled = true;
+      notInCatalogLabel.classList.add('visible');
+    }
+  }
+
+  addToCart() {
+    const quantityInput = this.block.querySelector('.cart .action input');
+    const quantity = parseInt(quantityInput.value, 2);
+    if (store.cart) {
+      store.cart.add(
         store.product.sku,
         store.product,
-        store.product.final_price,
-        quantityInput.value,
-      )
-    ) {
-      addToButton.disabled = false;
-      quantityInput.disabled = false;
-      return;
+        store.product.pricing.sellprice * quantity,
+        quantity,
+      );
     }
-    addToButton.disabled = true;
-    quantityInput.disabled = true;
   }
 
   /**
@@ -147,6 +166,7 @@ class ProductView {
    */
   renderAddToCartBlock(pricing, currency) {
     return /* html */`
+      <div class="not-in-catalog">Item not in catalog</div>
       <div class="cost">
         <div class="numericuom">${currency} ${pricing.sellprice}</div><span>/</span><div class="basismeasure">${pricing.description}</div>
       </div>
@@ -178,12 +198,18 @@ class ProductView {
       this.renderPricingLoading();
       lookupProductPricing('123', Math.random().toString(), 'abc').then((result) => {
         if (result.products && result.products.length > 0) {
-          const [inventory] = result.products;
-          inventory.instock = inventory.qty > 0;
+          const [pricing] = result.products;
+          pricing.instock = pricing.qty > 0;
+          store.product.pricing = pricing;
 
           const productCartElement = this.block.querySelector('.product-config .cart');
-          productCartElement.innerHTML = this.renderAddToCartBlock(inventory, result.currency);
+          productCartElement.innerHTML = this.renderAddToCartBlock(pricing, result.currency);
           this.enableAddToCart();
+
+          const addToCartBtn = this.block.querySelector('.cart .action .add-to-cart');
+          addToCartBtn.addEventListener('click', () => {
+            this.addToCart();
+          });
         }
       });
     } else {

@@ -4,7 +4,11 @@ body > .breadcrumbs-wrapper {
 
 .breadcrumbs ul {
   list-style-type: none;
-  padding-left: 0px;
+  padding-left: 0;
+  padding-top: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .breadcrumbs li {
@@ -26,4 +30,52 @@ body > .breadcrumbs-wrapper {
     padding-right: 10px;
     padding-left: 10px;
     text-transform: none;
+}
+
+.breadcrumbs.trim li:first-of-type {
+  display: none;
+}
+
+.breadcrumbs.trim li:last-of-type {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .breadcrumbs-wrapper {
+    max-width: 1590px;
+    margin: auto;
+    width: 100%;
+  }
+
+  .breadcrumbs li:not(:first-child)::before {
+    content: "|";
+    font-size: 12px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 1;
+    padding-right: 10px;
+    padding-left: 10px;
+    text-transform: none;
+  }
+
+  .breadcrumbs.trim li:not(:first-child):not(:nth-child(2))::before {
+      content: "|";
+  }
+
+  .breadcrumbs li:first-of-type {
+    display: inline;
+  }
+
+  .breadcrumbs li:last-of-type {
+      display: inline;
+  }
+
+  .breadcrumbs.trim li:first-of-type {
+    display: inline;
+  }
+
+  .breadcrumbs.trim li:last-of-type {
+      display: inline;
+  }
 }

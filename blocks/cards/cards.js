@@ -15,5 +15,9 @@ export default function decorate(block) {
   ul.querySelectorAll('img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
   block.textContent = '';
   block.append(ul);
-  block.querySelectorAll('a.button, p.button-container').forEach((a) => { a.className = ''; });
+  if (block.classList.contains('first-dark')) {
+    const li = ul.querySelector('li');
+    li.classList.add('dark');
+  }
+  if (!block.classList.contains('overlay')) block.querySelectorAll('a.button, p.button-container').forEach((a) => { a.className = ''; });
 }

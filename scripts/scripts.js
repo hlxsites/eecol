@@ -19,6 +19,8 @@ import {
   decorateBlock,
   loadBlock,
   makeLinksRelative,
+  createOptimizedPicture,
+  decorateSections,
 } from './helix-web-library.esm.js';
 
 /**
@@ -28,10 +30,20 @@ import {
 function buildHeroBlock(main) {
   const h1 = main.querySelector('h1');
   const picture = main.querySelector('picture');
+
   // eslint-disable-next-line no-bitwise
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
     const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
+    const elems = [];
+    const currentSection = h1.closest('main > div');
+    if (!currentSection.previousElementSibling && currentSection.children.length < 5) {
+      [...currentSection.children].forEach((child) => { elems.push(child); });
+    } else {
+      elems.push(picture);
+      elems.push(h1);
+    }
+
+    section.append(buildBlock('hero', { elems }));
     main.prepend(section);
   }
 }
@@ -45,8 +57,6 @@ function buildAutoBlock(main, blockName, replace = true, prepend = false) {
   section.append(buildBlock(blockName, { elems: [] }));
   if (replace) {
     main.innerHTML = '';
-    // If we are replacing the main content, we likely also want to add breadcrumbs
-    section.prepend(buildBlock('breadcrumbs', { elems: [] }));
   }
   return prepend ? main.prepend(section) : main.append(section);
 }
@@ -233,7 +243,7 @@ export async function searchProducts(query) {
 
 function replaceProductImages(data) {
   return data.map((product) => {
-    product.image = `${product.image.replace('https://qa-store.eecol.com/', 'https://main--eecol--hlxsites.hlx-orch.live/')}?format=webplyhttps://main--eecol--hlxsites.hlx-orch.live/media/catalog/product/cache/6d59eebca7373f2b9debabbeed105ddb/f/f/ff1a6bd51074f80f2873e6e068ed59dcf658b2cd-large.png?format=webply&quality=medium&width=750`;
+    product.image = `${product.image.replace('https://qa-store.eecol.com/', 'https://main--eecol--hlxsites.hlx-orch.live/')}?format=webply&quality=medium&width=750`;
     return product;
   });
 }
@@ -287,11 +297,20 @@ export async function lookupProductInventory(customerId, productId, productLine)
 }
 
 /**
+ * Mulesoft Pricing Response Object
+ * @typedef {Object} ProductPricingResponse
+ * @property {string} brand The product id, manufacturer_part_number_brand in CIF?
+ * @property {string} currency Manufacturer code from EECOL
+ * @property {string} customerId Available quantity
+ * @property {import('../blocks/product/product.js').ProductPricing[]} products
+ */
+
+/**
  * Fetches the pricing for a product
  * @param {string} customerId Customer Account Code
  * @param {string} productId Manufacturer part number
  * @param {string} productLine Manufacturer code from EECOL
- * @returns
+ * @returns {Promise<ProductPricingResponse>} pricing
  */
 export async function lookupProductPricing(customerId, productId, productLine) {
   let inventoryData = {};
@@ -378,7 +397,7 @@ export function clearQueryParams() {
   window.history.pushState(null, '', window.location.pathname);
 }
 
-const PageTypes = [
+export const PageTypes = [
   'category',
   'product',
 ];
@@ -465,13 +484,13 @@ export function retrieveUserData(key) {
   const id = localStorage.getItem('selectedAccount');
   if (!id) {
     console.warn('retrieveUserData() No account selected');
-    return;
+    return null;
   }
 
   const scopedKey = `account/${id}/${key}`;
   const data = localStorage.getItem(scopedKey);
   if (!data) {
-    return;
+    return null;
   }
 
   try {
@@ -523,6 +542,7 @@ HelixApp.init({
   rumGeneration: ['project-1'],
   productionDomains: ['poc-staging.eecol.com'],
   lazyStyles: true,
+  favIcon: '/styles/favicon.ico',
 })
   .withLoadEager(async () => {
     await fetchCategories();
@@ -532,6 +552,7 @@ HelixApp.init({
       const pageType = getMetadata('pagetype');
       if (PageTypes.includes(pageType)) {
         buildAutoBlock(main, pageType);
+        document.body.classList.add('commerce-page');
       } else {
         buildHeroBlock(main);
       }
@@ -539,6 +560,18 @@ HelixApp.init({
       // eslint-disable-next-line no-console
       console.error('Auto Blocking failed', error);
     }
+  })
+  .withDecorateSections((main) => {
+    decorateSections(main);
+    const sections = [...main.querySelectorAll('.section')];
+    sections.forEach((section) => {
+      const bg = section.dataset.background;
+      if (bg) {
+        const picture = createOptimizedPicture(bg);
+        picture.classList.add('section-background');
+        section.prepend(picture);
+      }
+    });
   })
   .withLoadHeader(async (header) => {
     loadHeader(header);
@@ -554,6 +587,7 @@ HelixApp.init({
     }
   })
   .withLoadDelayed(() => {
+    // eslint-ignore-next-line import/no-cycle
     window.setTimeout(() => import('./delayed.js'), 4000);
   })
   .decorate();

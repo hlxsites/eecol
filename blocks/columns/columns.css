@@ -7,6 +7,13 @@
     width: 100%;
 }
 
+.columns.dark > div > div {
+  background-color: var(--dark-gray);
+  padding: 32px;
+  text-align: center;
+  margin: 16px 0 0;
+}
+
 @media (min-width: 900px) {
     .columns > div {
         display: flex;
@@ -16,6 +23,10 @@
     .columns > div > div {
         flex: 1;
         margin-left: 32px;
+    }
+
+    .columns.dark > div > div {
+      margin: 16px 0 0 16px;
     }
 
     .columns > div > div:first-of-type {

@@ -12,12 +12,17 @@ main .hero {
     position: relative;
     padding: 2rem;
     min-height: 420px;
+    color: white;
+    text-align: center;
+}
+
+main .hero > * {
+    margin: auto;
+    max-width: 768px;
 }
 
 main .hero h1 {
-    max-width: 768px;
     margin: 0 auto;
-    color: white;
 }
 
 .solution main .hero {
