@@ -118,6 +118,9 @@ class CategoryFilterController {
   onFacetContainerClicked = (event) => {
     const { currentTarget } = event;
     if (currentTarget.getAttribute('aria-expanded') === 'false') {
+      const attributeCode = currentTarget.getAttribute('data-attribute-code');
+      const facet = this.getFacetByAttributeCode(attributeCode);
+      this.renderFacetOptions(currentTarget, facet);
       currentTarget.querySelector('.products-facet-options').style.display = 'block';
       currentTarget.setAttribute('aria-expanded', 'true');
     } else {
@@ -157,6 +160,10 @@ class CategoryFilterController {
       // TODO: Should be sanitized...
       this.activeFilterConfig[key] = value;
     });
+  }
+
+  getFacetByAttributeCode(attributeCode) {
+    return this.collectionFacets.filter((facet) => facet.attribute_code === attributeCode)[0];
   }
 
   getFilterQueryParamsString() {
@@ -205,23 +212,27 @@ class CategoryFilterController {
     </div>`;
   }
 
+  renderFacetOptions(element, facet) {
+    const { attribute_code: attributeCode, options } = facet;
+    const optionsContainer = element.querySelector('.products-facet-options');
+    const optionsHTML = options.map((option) =>/* html */`
+        <input type="checkbox" value="${option.value}" id="products-filter-${option.value}" name="${attributeCode}">
+        <label for="products-filter-${option.value}">${option.label} (${option.count})</label>
+      `).join('');
+    optionsContainer.innerHTML = optionsHTML;
+  }
+
   /**
    * Render a facet
    * @param {string} facetKey
    * @returns The facet HTML
    */
   renderFacet(facet) {
-    // const facet = filteredFacets[facetKey];
-    //  const values = Object.keys(facet);
     const { label, attribute_code: attributeCode, options } = facet;
     return /* html */`
-      <div class="products-facet" aria-expanded="false">
+      <div class="products-facet" aria-expanded="false" data-attribute-code="${attributeCode}">
         <h3>${label} (${options.length})<img src='/icons/disclosure.svg'></h3>
-        <div class="products-facet-options">
-          ${options.map((option) =>/* html */`
-              <input type="checkbox" value="${option.value}" id="products-filter-${option.value}" name="${attributeCode}">
-              <label for="products-filter-${option.value}">${option.label} (${option.count})</label>`).join('')}
-        </div>
+        <div class="products-facet-options"></div>
       </div>
     `;
   }
