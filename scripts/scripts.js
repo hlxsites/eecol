@@ -97,13 +97,7 @@ export function titleCase(string) {
  */
 async function fetchCategories() {
   if (!window.categories) {
-    const response = await fetch('https://graph-dev3.adobe.io/api/e5f22310-1eab-4a3c-8771-943503170c1c/graphql?api_key=adobeio_onboarding', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: `{
+    const query = `{
   categories {
     total_count
     items {
@@ -147,8 +141,13 @@ async function fetchCategories() {
       total_pages
     }
   }
-}`,
-      }),
+}`;
+
+    const response = await fetch(`https://graph-dev3.adobe.io/api/e5f22310-1eab-4a3c-8771-943503170c1c/graphql?api_key=adobeio_onboarding&query=${query}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     const json = await response.json();
