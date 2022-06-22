@@ -32,10 +32,6 @@ body > .breadcrumbs-wrapper {
     text-transform: none;
 }
 
-.breadcrumbs.trim li:not(:first-child):not(:nth-child(2))::before {
-    content: "";
-}
-
 .breadcrumbs.trim li:first-of-type {
   display: none;
 }
@@ -63,11 +59,23 @@ body > .breadcrumbs-wrapper {
     text-transform: none;
   }
 
+  .breadcrumbs.trim li:not(:first-child):not(:nth-child(2))::before {
+      content: "|";
+  }
+
   .breadcrumbs li:first-of-type {
     display: inline;
   }
 
   .breadcrumbs li:last-of-type {
+      display: inline;
+  }
+
+  .breadcrumbs.trim li:first-of-type {
+    display: inline;
+  }
+
+  .breadcrumbs.trim li:last-of-type {
       display: inline;
   }
 }
