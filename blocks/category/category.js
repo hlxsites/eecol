@@ -516,6 +516,8 @@ class CategoryResultsController {
       };
     }
 
+    document.title = this.category.name;
+
     // Render the category page scafolding
     this.block.innerHTML = this.renderBlockScafolding();
     this.categoryPaginationController = new CategoryPaginationController(

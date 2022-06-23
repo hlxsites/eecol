@@ -7,11 +7,19 @@
     width: 100%;
 }
 
+.solution .columns > div {
+  align-items: center;
+}
+
 .columns.dark > div > div {
   background-color: var(--dark-gray);
   padding: 32px;
   text-align: center;
   margin: 16px 0 0;
+}
+
+.solution .section.dark .columns.dark > div > div {
+  text-align: left;
 }
 
 @media (min-width: 900px) {

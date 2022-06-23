@@ -35,6 +35,8 @@ class ProductView {
     try {
       const product = await lookupProduct(sku);
       store.product = product;
+
+      document.title = store.product.name;
       document.dispatchEvent(new CustomEvent('product-loaded'));
 
       this.ph = await getPlaceholders('/ca/en');

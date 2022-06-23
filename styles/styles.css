@@ -385,6 +385,9 @@ main .section.dark {
   }  
 }
 
+main .section .default-content-wrapper {
+  text-align: center;
+}
 
 main .section picture.section-background {
   position: absolute;
@@ -419,6 +422,9 @@ main .section.background-image .default-content-wrapper {
     max-width: 600px;
     margin: 32px;
     padding: 32px;
-  }
-    
+  } 
+}
+
+main .section.section.background-image .default-content-wrapper {
+  text-align: left;
 }

@@ -7,9 +7,20 @@
     grid-gap: 16px;
 }
 
+.cards.logos {
+    padding-bottom: 64px;
+}
+
 .cards.small > ul {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
+
+.cards.logos > ul {
+    max-width: 800px;
+    margin: auto; 
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
 
 .cards > ul > li {
     border: 1px solid var(--highlight-background-color);
@@ -33,6 +44,23 @@
     aspect-ratio: 4 / 3;
     object-fit: cover;
 }
+
+.cards.logos > ul > li {
+    border: unset;
+}
+
+.cards.logos > ul > li img {
+    aspect-ratio: unset;
+    height: 100%;
+    object-fit: contain;
+}
+
+.cards.logos .cards-card-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 .cards.overlay > ul > li {
     position: relative;
