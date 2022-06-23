@@ -107,8 +107,61 @@ export function titleCase(string) {
  */
 async function fetchCategories() {
   if (!window.categories) {
-    const response = await fetch('https://main--eecol--hlxsites.hlx-orch.live/categories');
+    const query = `{
+  categories {
+    total_count
+    items {
+      uid
+      level
+      url_key
+      url_path
+      name
+      path
+      children_count
+      children {
+        uid
+        level
+        name
+        url_key
+        url_path
+        path
+        children_count
+        path_in_store
+        children {
+          uid
+          level
+          name
+          path
+          url_key
+          url_path
+          children {
+            uid
+            level
+            name
+            path
+            url_key
+            url_path
+          }
+        }
+      }
+    }
+    page_info {
+      current_page
+      page_size
+      total_pages
+    }
+  }
+}`;
+
+    const response = await fetch(`https://graph-dev3.adobe.io/api/e5f22310-1eab-4a3c-8771-943503170c1c/graphql?api_key=adobeio_onboarding&query=${query}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
     const json = await response.json();
+
     const categories = json.data.categories?.items[0].children;
     const categoriesKeyDictionary = {};
     const categoriesIdDictionary = {};
